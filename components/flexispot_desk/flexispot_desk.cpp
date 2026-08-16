@@ -35,6 +35,8 @@ void FlexiSpotDesk::setup() {
 void FlexiSpotDesk::dump_config() {
   ESP_LOGCONFIG(TAG, "FlexiSpot Desk:");
   ESP_LOGCONFIG(TAG, "  Wake pin configured: %s", this->wake_pin_ != nullptr ? "yes" : "no");
+  ESP_LOGCONFIG(TAG, "  Nudge duration: %u ms", this->nudge_duration_ms_);
+  ESP_LOGCONFIG(TAG, "  Preset hold: %u ms", this->preset_hold_ms_);
   if (this->height_sensor_ != nullptr) {
     LOG_SENSOR("  ", "Height", this->height_sensor_);
   }
@@ -84,8 +86,8 @@ void FlexiSpotDesk::loop() {
     case DeskState::ACTIVE:
       if (this->pending_command_ >= 0) {
         uint32_t max_hold = this->is_continuous_command_(this->pending_command_)
-                                ? NUDGE_DURATION_MS
-                                : PRESET_HOLD_MS;
+                                ? this->nudge_duration_ms_
+                                : this->preset_hold_ms_;
         if (now - this->command_start_time_ >= max_hold) {
           ESP_LOGD(TAG, "Command %d hold complete, releasing", this->pending_command_);
           this->pending_command_ = -1;

@@ -57,6 +57,8 @@ class FlexiSpotDesk : public Component, public uart::UARTDevice {
 
   void set_wake_pin(GPIOPin *pin) { this->wake_pin_ = pin; }
   void set_height_sensor(sensor::Sensor *sensor) { this->height_sensor_ = sensor; }
+  void set_nudge_duration(uint32_t ms) { this->nudge_duration_ms_ = ms; }
+  void set_preset_hold(uint32_t ms) { this->preset_hold_ms_ = ms; }
 
   void request_command(CommandIndex cmd);
   void stop_command();
@@ -88,8 +90,11 @@ class FlexiSpotDesk : public Component, public uart::UARTDevice {
   static const uint32_t WAKE_HIGH_MS = 1100;
   static const uint32_t IDLE_POLL_MS = 3000;
   static const uint32_t ACTIVE_TIMEOUT_MS = 5000;
-  static const uint32_t PRESET_HOLD_MS = 1000;
-  static const uint32_t NUDGE_DURATION_MS = 5000;
+
+  // Configurable from YAML (`preset_hold:` / `nudge_duration:`).
+  // Defaults match the values these had when they were `static const`.
+  uint32_t preset_hold_ms_{1000};
+  uint32_t nudge_duration_ms_{5000};
 
   void read_uart_();
   void process_packet_();
