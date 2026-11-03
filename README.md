@@ -143,7 +143,7 @@ Add this to your own ESPHome YAML — no need to clone the repo:
 
 ```yaml
 external_components:
-  - source: github://dimitri-vs/flexispot-esphome@main
+  - source: github://dimitri-vs/flexispot-esphome@master
     components: [ flexispot_desk ]
 ```
 
